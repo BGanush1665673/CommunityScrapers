@@ -1,0 +1,44 @@
+name: 3xplanet
+
+sceneByURL:
+  - action: scrapeXPath
+    url:
+      - 3xplanet.net/
+      - 3xpla.net/
+    scraper: sceneScraper
+    queryURL: "{url}"
+    queryURLReplace:
+      url:
+        - regex: 3xpla.net
+          with: "3xplanet.net"
+        - regex: 3xpla\.net
+          with: "3xplanet.net"
+        - regex: 3xplanet\.net
+          with: "3xplanet.net"
+
+xPathScrapers:
+  sceneScraper:
+    scene:
+      Title: //h1[@class="entry-title"]/text()
+      Image:
+        selector: //div[contains(@class, "td-post-content")]//img[contains(@src, "cover")]/@src
+        postProcess:
+          - replace:
+            - regex: (http:|https:)
+              with:
+            - regex: ^
+              with: "https:"
+
+      Date: 
+        selector: //p[contains(., 'Release Date:')]/text()
+        postProcess:
+          - replace:
+            - regex: Release Date\:\s
+              with: 
+      Tags:
+        Name: //p[contains(., 'Tags:')]/a/text()
+      Performers:
+        Name: //p[contains(., 'Starring:')]/a/text()
+      Studio:
+        Name:
+          selector: //p[contains(., 'Studio:')]/a/text()
